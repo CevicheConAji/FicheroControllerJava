@@ -1,35 +1,36 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+    public static Scanner sc = new Scanner(System.in);
+    public static String rutafichero = "";
+
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
 
-        //definimos la ruta en la que se encuentra el fichero
-        String rutafichero = "";
-        System.out.println("Escribe la ruta que quieres listar:");
-        rutafichero = sc.nextLine();
+        ///Users/piero/javatest
 
-        creandoFileStructure(rutafichero);
-        existeDirectorioImprimeRuta(rutafichero);
+        crearImprimeEstructura();
 
     }
-    public static void creandoFileStructure(String ruta) {
+    public static void crearImprimeEstructura() {
+        System.out.println("Escribe la ruta que quieres listar:");
+        //definimos la ruta en la que se encuentra el fichero
 
-        File ficheroMain = new File(ruta);
+        rutafichero = sc.nextLine();
+
+        File ficheroMain = new File(rutafichero);
         if(ficheroMain.exists()) {
-            System.out.println("El archivo ya existe");
+            imprimirRuta();
         }else{
 
         ficheroMain.mkdir();
-        File ficheroD1 = new File(ruta+"d1");
+        File ficheroD1 = new File(rutafichero+"/d1");
         ficheroD1.mkdir();
-        File ficheroD2 = new File(ruta+"d2");
+        File ficheroD2 = new File(rutafichero+"/d2");
         ficheroD2.mkdir();
-        File textoD1 = new File(ruta+"d1/f11.txt");
-        File textD2 = new File(ruta+"d2/f12.txt");
+        File textoD1 = new File(rutafichero+"/d1/f11.txt");
+        File textD2 = new File(rutafichero+"/d2/f21.txt");
         try {
             textoD1.createNewFile();
             textD2.createNewFile();
@@ -43,9 +44,10 @@ public class Main {
 
     }
 
-    public static void existeDirectorioImprimeRuta(String ruta) {
+    public static void imprimirRuta() {
+
         //Creamos un objeto fichero con esa ruta
-        File fichero = new File(ruta);
+        File fichero = new File(rutafichero);
 
         File[] ficheros = fichero.listFiles();
 
@@ -57,9 +59,19 @@ public class Main {
                 if(fichero.isFile()){
                     System.out.println("\t-"+file.getName()+" es un fichero");
                 }
-                if(fichero.isDirectory()){
+
+                else if(fichero.isDirectory()){
                     System.out.println("*"+file.getName()+" es un directorio");
-                    System.out.println(Arrays.toString(file.list()));
+
+                    File[] subdirectorios = file.listFiles();
+                    if(subdirectorios != null){
+                        for(File subdir : subdirectorios){
+                            System.out.println("\t-"+subdir.getName());
+                        }
+                    }else{
+                        System.out.println("El directorio esta vacio");
+                    }
+
                 }
 
             }
