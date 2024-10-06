@@ -10,14 +10,15 @@ public class Main {
 
         ///Users/piero/javatest
 
-        crearImprimeEstructura();
+        test();
 
     }
-    public static void crearImprimeEstructura() {
-        System.out.println("Escribe la ruta que quieres listar:");
+    public static void test() {
+        System.out.println("Introduzca la ruta en la que se creará la estructura");
         //definimos la ruta en la que se encuentra el fichero
 
         rutafichero = sc.nextLine();
+        rutafichero += "/javatest";
 
         File ficheroMain = new File(rutafichero);
         if(ficheroMain.exists()) {
@@ -45,7 +46,7 @@ public class Main {
     }
 
     public static void imprimirRuta() {
-
+        System.out.println("IMPRIMIENDO RUTA");
         //Creamos un objeto fichero con esa ruta
         File fichero = new File(rutafichero);
 
@@ -69,13 +70,31 @@ public class Main {
                             System.out.println("\t-"+subdir.getName());
                         }
                     }else{
-                        System.out.println("El directorio esta vacio");
+                        System.out.println("\t-El directorio esta vacio");
                     }
 
                 }
 
             }
+            modificarFicheros();
         }
         else System.out.println("El fichero no existe.");
+    }
+    public static void modificarFicheros(){
+        System.out.println("MODIFICAR FICHEROS");
+        String ficheroCambiar;
+        String ficheroNuevo;
+        System.out.print("***Inserte la ruta del archivo que desea cambiar el nombre*** " +
+                "\nUsted esta en :"+rutafichero);
+        ficheroCambiar = sc.nextLine();
+
+        File fichero = new File(rutafichero+ficheroCambiar);
+        if(fichero.exists()){
+            System.out.print("***Introduzca la ruta y el nuevo nombre del archivo***. " +
+                    "\nUsted esta en :"+rutafichero);
+            ficheroNuevo = sc.nextLine();
+            fichero.renameTo(new File(rutafichero+ficheroNuevo));
+            System.out.println("Se cambio el nombre del fichero "+ficheroNuevo+" a "+ficheroNuevo);
+        }
     }
 }
