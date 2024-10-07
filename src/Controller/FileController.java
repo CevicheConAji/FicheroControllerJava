@@ -209,11 +209,6 @@ public class FileController {
             fichero.renameTo(nuevaRuta);
             System.out.println("Se cambio el nombre del fichero " + ficheroCambiar + " a " + ficheroNuevo);
 
-            //Entrar a test si esta en modo test
-            //if(op.equalsIgnoreCase("1")){
-            //moverFicheroConFilesRename();
-
-            //}
         } else {
             System.out.println("El fichero no existe.");
             modificarRuta();
