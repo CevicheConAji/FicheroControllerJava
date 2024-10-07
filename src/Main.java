@@ -3,17 +3,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class Main {
     public static Scanner sc = new Scanner(System.in);
-    public static String rutafichero = "/home/pierozavala/javatest";
-    public static String rutaMain = rutafichero;
+    public static String rutafichero = "";
     public static String op = " ";
+    public static String sistemOperativo = "linux";
 
     public static void main(String[] args) {
 
-        //Users/piero/javatest
+        //Users/Main/javatest
 
         menu();
 
@@ -22,22 +24,30 @@ public class Main {
         System.out.println("Bienvenido al sistema");
 
         while (!op.equalsIgnoreCase("s")) {
-            System.out.println("***TEST***" +
-                    "\n1)TEST01" +
-                    "\n2)TEST02" +
-                    "\nl)LISTAR" +
-                    "\nb)BORRAR" +
-                    "\nm)MODIFICAR FICHERO" +
-                    "\nmo)MODIFICAR RUTA" +
-                    "\ns)SALIR");
+            System.out.print("***TEST***" +
+                    "\nl) LISTAR" +
+                    "\nb) BORRAR" +
+                    "\nm) MOVER O CAMBIAR NOMBRE FICHERO(Rename)" +
+                    "\nmf) MOVER FICHERO (File.move)" +
+                    "\ncd) MODIFICAR RUTA" +
+                    "\ni) INFORMACION FICHERO" +
+                    "\nsy) SISTEMA OPERATIVO" +
+                    "\n1) TEST01" +
+                    "\n2) TEST02" +
+                    "\ns) SALIR" +
+                    "\n:");
             op = sc.nextLine();
             switch (op) {
                 case "1":test1();break;
+                case "2":test02();break;
                 case "b":borrarFichero();break;
                 case "l":imprimirDirectorio();break;
                 case "m":modificarFicheros();break;
-                case "i":break;
-                case "o":break;
+                case "i":preguntaRuta();
+                    informacionFichero(new File(rutafichero));break;
+                case "cd":modificarRuta();break;
+                case "mf":moverFicheroConFilesRename();break;
+                case "sy":sistemaOperativo();break;
                 case "s":break;
             }
         }
@@ -46,14 +56,9 @@ public class Main {
         System.out.println("Introduzca la ruta en la que se creará la estructura");
         //definimos la ruta en la que se encuentra el fichero
 
-        /**
-         * Activar antes de usar
-         */
-        //rutafichero = sc.nextLine();
-        //String s [] = rutafichero.split("/");
-        //rutaMain = ("/"+s[1]);
-        //System.out.println(rutaMain);
-        //rutafichero += "/javatest";
+
+        preguntaRuta();
+        rutafichero += "/javatest";
 
         File ficheroMain = new File(rutafichero);
         if(ficheroMain.exists()) {
@@ -61,15 +66,15 @@ public class Main {
         }else{
 
         ficheroMain.mkdir();
-        File ficheroD1 = new File(rutafichero+"/d1");
-        ficheroD1.mkdir();
-        File ficheroD2 = new File(rutafichero+"/d2");
-        ficheroD2.mkdir();
-        File textoD1 = new File(rutafichero+"/d1/f11.txt");
-        File textD2 = new File(rutafichero+"/d2/f21.txt");
+        File d1 = new File(rutafichero+"/d1");
+        d1.mkdir();
+        File d2 = new File(rutafichero+"/d2");
+        d2.mkdir();
+        File f11 = new File(rutafichero+"/d1/f11.txt");
+        File f21 = new File(rutafichero+"/d2/f21.txt");
         try {
-            textoD1.createNewFile();
-            textD2.createNewFile();
+            f11.createNewFile();
+            f21.createNewFile();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -79,13 +84,36 @@ public class Main {
         }
 
     }
+    public static void test02(){
+        preguntaRuta();
+        File usr01 = new File(rutafichero+"/usr01");
+        File usr02 = new File(rutafichero+"/usr02");
+        File f1 = new File(usr01+"/f1.txt");
+        File d1 = new File(usr02+"/d1");
+        File d2 = new File(usr02+"/d2");
+        File f2 = new File(d1+"/f2.txt");
+        File f3 = new File(d2+"/f3.txt");
+
+        usr01.mkdir();
+        usr02.mkdir();
+        d1.mkdir();
+        d2.mkdir();
+
+        try {
+            f1.createNewFile();
+            f2.createNewFile();
+            f3.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void imprimirDirectorio() {
         preguntaRuta();
-        System.out.println("IMPRIMIENDO RUTA");
+        System.out.println("IMPRIMIENDO "+rutafichero);
 
         //Creamos un objeto fichero con esa ruta
-        File fichero = new File(rutaMain);
+        File fichero = new File(rutafichero);
 
         File[] ficheros = fichero.listFiles();
         //Verificacmos si el fichero existe
@@ -94,7 +122,7 @@ public class Main {
             for(File file : ficheros){
 
                 if(fichero.isFile()){
-                    System.out.println("\t-"+file.getName()+" es un fichero");
+                    System.out.println("-"+file.getName()+" es un fichero");
                 }
 
                 else if(fichero.isDirectory()){
@@ -103,19 +131,27 @@ public class Main {
                     File[] subdirectorios = file.listFiles();
                     if(subdirectorios != null){
                         for(File subdir : subdirectorios){
-                            System.out.println("\t-"+subdir.getName());
+                            //
+                            if(subdir.isFile()){
+                                System.out.println("\t-"+subdir.getName()+" es un fichero");
+                            }
+
+                            else if(subdir.isDirectory()){
+                                System.out.println("\t-"+subdir.getName()+" es un directorio");
+
+                            }
+
                         }
-                    }else{
-                        System.out.println("\t-El directorio esta vacio");
                     }
-
                 }
-
             }
             if(op.equalsIgnoreCase("1")) modificarFicheros();
 
         }
-        else System.out.println("El fichero no existe.");
+        else{
+            System.out.println("El fichero no existe.");
+            modificarRuta();
+        }
     }
     public static void modificarFicheros(){
         String ficheroCambiar,ficheroNuevo;
@@ -123,12 +159,12 @@ public class Main {
 
         System.out.println("CAMBIAR NOMBRE FICHEROS O MOVER ENTRE DIRECTORIOS");
         System.out.print("***Inserte la ruta del archivo que desea cambiar el nombre*** " +
-                "\nUsted esta en :"+rutafichero);
+                "\nUsted esta en :$"+rutafichero);
         ficheroCambiar = sc.nextLine();
         File fichero = new File(rutafichero+ficheroCambiar);
         if(fichero.exists()){
             System.out.print("***Introduzca la ruta y el nuevo nombre del archivo***. " +
-                    "\nUsted esta en :"+rutafichero);
+                    "\nUsted esta en :$"+rutafichero);
             ficheroNuevo = sc.nextLine();
             File nuevaRuta = new File(rutafichero+ficheroNuevo);
             
@@ -136,12 +172,15 @@ public class Main {
             System.out.println("Se cambio el nombre del fichero "+ficheroCambiar+" a "+ficheroNuevo);
 
             //Entrar a test si esta en modo test
-            if(op.equalsIgnoreCase("t")){
-                moverFicheroConFilesRename();
+            //if(op.equalsIgnoreCase("1")){
+                //moverFicheroConFilesRename();
 
-            }
+            //}
         }
-        else System.out.println("El fichero no existe.");
+        else {
+            System.out.println("El fichero no existe.");
+            modificarRuta();
+        }
     }
     public static void moverFicheroConFilesRename(){
         String ficheroMover,directorioNuevo,nuevoNombre ;
@@ -149,10 +188,11 @@ public class Main {
         preguntaRuta();
 
         System.out.println("MOVER FICHERO");
-        System.out.print("Introduzca el fichero que quiere mover\nUsted esta en :"+rutafichero);
+        System.out.print("Introduzca el fichero que quiere mover\nUsted esta en :$"+rutafichero);
         ficheroMover = sc.nextLine();
-        System.out.print("Introduzca la ruta a donde quieres mover el fichero \nUsted esta en :"+rutafichero);
+        System.out.print("Introduzca la ruta a donde quieres mover el fichero /ruta \nUsted esta en :$"+rutafichero);
         directorioNuevo = sc.nextLine();
+
         String[] s = ficheroMover.split("/");
 
         nuevoNombre = s[s.length-1];
@@ -171,27 +211,42 @@ public class Main {
         preguntaRuta();
 
         System.err.println("***CUIDADO***");
-        System.err.println("BORRAR FICHERO");
-        System.err.print("Usted esta en :"+rutaMain);
+        System.err.println("BORRAR FICHERO O DIRECTORIOS ");
+        System.err.print("Usted esta en :"+ rutafichero);
         ficheroBorrar = sc.nextLine();
-        rutaMain += ficheroBorrar;
+        rutafichero += ficheroBorrar;
 
-        File fichero = new File(rutaMain);
+        File fichero = new File(rutafichero);
         if(fichero.exists()){
-            if(fichero.delete()){
-            System.out.print("BORRANDO PARA SIEMPRE: "+rutaMain);
-            }
+
+                if(fichero.delete()){
+                    System.out.println("BORRANDO PARA SIEMPRE: "+ rutafichero);
+                    System.out.println("SU RUTA A CAMBIADO INGRESE LA NUEVA RUTA");
+                    modificarRuta();
+                }
+            else{
+                System.out.println("El fichero no esta vacio. INTENTALO DE NUEVO");
+                borrarFichero();
+                }
+
+
+        }else{
+            System.out.println("Fcihero no Existe");
+            modificarRuta();
         }
 
 
     }
     public static void preguntaRuta(){
-        if(rutaMain.equalsIgnoreCase("")){
-            System.out.println("Ingrese ruta");
-            rutaMain = sc.nextLine();
+        if(rutafichero.equalsIgnoreCase("")){
+            System.out.print("Ingrese ruta" +
+                    "\n$");
+            rutafichero = sc.nextLine();
         }
     }
     public static void informacionFichero(File fichero){
+        long ultamodificacion = fichero.lastModified();
+        DateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         if(fichero.exists()){
             System.out.println("***INFORMACION FICHERO***");
@@ -200,17 +255,37 @@ public class Main {
             System.out.println("Tamaño: "+fichero.length());
 
             if (fichero.isDirectory()){
-                System.out.println("es un directorio");
+                System.out.println("Tipo Archivo : directorio");
             }
             else{
-                System.out.println("es un archivo");
+                System.out.println("Tipo Archivo : archivo");
             }
+            System.out.println("Ultima modificacion : "+date.format(ultamodificacion));
+            System.out.println("Permisos de ejecucion: "+fichero.canExecute());
+            System.out.println("Permisos de lectura: "+fichero.canRead());
+            System.out.println("Permisos de escritura: "+fichero.canWrite());
 
+        }else {
+            System.out.println("El fichero no existe.");
+            modificarRuta();
         }
 
     }
-    public static void modificarRute(){
-        System.out.println("Ingrese ruta");
-        rutaMain = sc.nextLine();
+    public static void modificarRuta(){
+        System.out.print("Ingrese ruta" +
+                "\n$");
+        rutafichero = sc.nextLine();
+        System.out.println("***SE MODIFICO LA RUTA***");
+    }
+
+    public static void sistemaOperativo(){
+        preguntaRuta();
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains(sistemOperativo)){
+            informacionFichero(new File(rutafichero));
+        }else {
+            System.out.println("Sistema operativo: "+os);
+            System.out.println("solo se muetra a usuarios de "+sistemOperativo);
+        }
     }
 }
