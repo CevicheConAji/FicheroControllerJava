@@ -285,7 +285,7 @@ public class FileController {
     }
 
     public void informacionFichero(File fichero) {
-        long ultamodificacion = fichero.lastModified();
+        long ultaModificacion = fichero.lastModified();
         DateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         if (fichero.exists()) {
@@ -299,7 +299,7 @@ public class FileController {
             } else {
                 System.out.println("Tipo Archivo : archivo");
             }
-            System.out.println("Ultima modificacion : " + date.format(ultamodificacion));
+            System.out.println("Ultima modificacion : " + date.format(ultaModificacion));
             System.out.println("Permisos de ejecucion: " + fichero.canExecute());
             System.out.println("Permisos de lectura: " + fichero.canRead());
             System.out.println("Permisos de escritura: " + fichero.canWrite());
