@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     public static Scanner sc = new Scanner(System.in);
-    public static String rutafichero = "/Users/piero/javatest";
+    public static String rutafichero = "/home/pierozavala/javatest";
     public static String rutaMain = rutafichero;
     public static String op = " ";
 
@@ -88,7 +88,6 @@ public class Main {
         File fichero = new File(rutaMain);
 
         File[] ficheros = fichero.listFiles();
-
         //Verificacmos si el fichero existe
         if(fichero.exists()){
             //Recorremos y comprobamos si es fichero y si es un directorio
@@ -131,7 +130,9 @@ public class Main {
             System.out.print("***Introduzca la ruta y el nuevo nombre del archivo***. " +
                     "\nUsted esta en :"+rutafichero);
             ficheroNuevo = sc.nextLine();
-            fichero.renameTo(new File(rutafichero+ficheroNuevo));
+            File nuevaRuta = new File(rutafichero+ficheroNuevo);
+            
+            fichero.renameTo(nuevaRuta);
             System.out.println("Se cambio el nombre del fichero "+ficheroCambiar+" a "+ficheroNuevo);
 
             //Entrar a test si esta en modo test
@@ -140,6 +141,7 @@ public class Main {
 
             }
         }
+        else System.out.println("El fichero no existe.");
     }
     public static void moverFicheroConFilesRename(){
         String ficheroMover,directorioNuevo,nuevoNombre ;
