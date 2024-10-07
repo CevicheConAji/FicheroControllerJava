@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
@@ -9,25 +8,54 @@ import java.util.Scanner;
 public class Main {
     public static Scanner sc = new Scanner(System.in);
     public static String rutafichero = "/Users/piero/javatest";
+    public static String rutaMain = rutafichero;
+    public static String op = " ";
 
     public static void main(String[] args) {
 
         //Users/piero/javatest
 
-        test();
-
+        menu();
 
     }
-    public static void test() {
+    public static void menu(){
+        System.out.println("Bienvenido al sistema");
+
+        while (!op.equalsIgnoreCase("s")) {
+            System.out.println("***TEST***" +
+                    "\n1)TEST01" +
+                    "\n2)TEST02" +
+                    "\nl)LISTAR" +
+                    "\nb)BORRAR" +
+                    "\nm)MODIFICAR FICHERO" +
+                    "\ns)SALIR");
+            op = sc.nextLine();
+            switch (op) {
+                case "1":test1();break;
+                case "b":borrarFichero();break;
+                case "l":imprimirDirectorio();break;
+                case "m":modificarFicheros();break;
+                //informacion
+                case "s":break;
+            }
+        }
+    }
+    public static void test1() {
         System.out.println("Introduzca la ruta en la que se creará la estructura");
         //definimos la ruta en la que se encuentra el fichero
 
-        rutafichero = sc.nextLine();
-        rutafichero += "/javatest";
+        /**
+         * Activar antes de usar
+         */
+        //rutafichero = sc.nextLine();
+        //String s [] = rutafichero.split("/");
+        //rutaMain = ("/"+s[1]);
+        //System.out.println(rutaMain);
+        //rutafichero += "/javatest";
 
         File ficheroMain = new File(rutafichero);
         if(ficheroMain.exists()) {
-            imprimirRuta();
+            imprimirDirectorio();
         }else{
 
         ficheroMain.mkdir();
@@ -50,8 +78,10 @@ public class Main {
 
     }
 
-    public static void imprimirRuta() {
+    public static void imprimirDirectorio() {
+        preguntaRuta();
         System.out.println("IMPRIMIENDO RUTA");
+
         //Creamos un objeto fichero con esa ruta
         File fichero = new File(rutafichero);
 
@@ -81,14 +111,16 @@ public class Main {
                 }
 
             }
-            modificarFicheros();
+            if(op.equalsIgnoreCase("1")) modificarFicheros();
+
         }
         else System.out.println("El fichero no existe.");
     }
     public static void modificarFicheros(){
-        System.out.println("MODIFICAR FICHEROS");
-        String ficheroCambiar;
-        String ficheroNuevo;
+        String ficheroCambiar,ficheroNuevo;
+        preguntaRuta();
+
+        System.out.println("CAMBIAR NOMBRE FICHEROS O MOVER ENTRE DIRECTORIOS");
         System.out.print("***Inserte la ruta del archivo que desea cambiar el nombre*** " +
                 "\nUsted esta en :"+rutafichero);
         ficheroCambiar = sc.nextLine();
@@ -97,16 +129,20 @@ public class Main {
             System.out.print("***Introduzca la ruta y el nuevo nombre del archivo***. " +
                     "\nUsted esta en :"+rutafichero);
             ficheroNuevo = sc.nextLine();
-            //Arreglar
             fichero.renameTo(new File(rutafichero+ficheroNuevo));
-            System.out.println("Se cambio el nombre del fichero "+ficheroNuevo+" a "+ficheroNuevo);
-            moverFicheroConFiles();
+            System.out.println("Se cambio el nombre del fichero "+ficheroCambiar+" a "+ficheroNuevo);
+
+            //Entrar a test si esta en modo test
+            if(op.equalsIgnoreCase("t")){
+                moverFicheroConFilesRename();
+
+            }
         }
     }
-    public static void moverFicheroConFiles(){
-        String ficheroMover;
-        String directorioNuevo = "";
-        String nuevoNombre ;
+    public static void moverFicheroConFilesRename(){
+        String ficheroMover,directorioNuevo,nuevoNombre ;
+
+        preguntaRuta();
 
         System.out.println("MOVER FICHERO");
         System.out.print("Introduzca el fichero que quiere mover\nUsted esta en :"+rutafichero);
@@ -123,6 +159,29 @@ public class Main {
                     Paths.get(rutafichero+directorioNuevo).resolve(nuevoNombre),StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    public static void borrarFichero(){
+        String ficheroBorrar;
+
+        preguntaRuta();
+
+        System.err.println("***CUIDADO***");
+        System.err.println("BORRAR FICHERO");
+        System.err.print("Usted esta en :"+rutaMain);
+        ficheroBorrar = sc.nextLine();
+        rutaMain += ficheroBorrar;
+
+        File fichero = new File(rutaMain);
+
+        fichero.delete();
+        System.out.print("BORRANDO PARA SIEMPRE: "+rutaMain);
+
+    }
+    public static void preguntaRuta(){
+        if(rutaMain.equalsIgnoreCase("")){
+            System.out.println("Ingrese ruta");
+            rutaMain = sc.nextLine();
         }
     }
 }
