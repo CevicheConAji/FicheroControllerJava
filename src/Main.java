@@ -28,6 +28,7 @@ public class Main {
                     "\nl)LISTAR" +
                     "\nb)BORRAR" +
                     "\nm)MODIFICAR FICHERO" +
+                    "\nmo)MODIFICAR RUTA" +
                     "\ns)SALIR");
             op = sc.nextLine();
             switch (op) {
@@ -35,7 +36,8 @@ public class Main {
                 case "b":borrarFichero();break;
                 case "l":imprimirDirectorio();break;
                 case "m":modificarFicheros();break;
-                //informacion
+                case "i":break;
+                case "o":break;
                 case "s":break;
             }
         }
@@ -83,7 +85,7 @@ public class Main {
         System.out.println("IMPRIMIENDO RUTA");
 
         //Creamos un objeto fichero con esa ruta
-        File fichero = new File(rutafichero);
+        File fichero = new File(rutaMain);
 
         File[] ficheros = fichero.listFiles();
 
@@ -153,7 +155,7 @@ public class Main {
 
         nuevoNombre = s[s.length-1];
         System.out.println("Se movio el fichero:"+nuevoNombre+" a "+directorioNuevo);
-
+        //agregar cuandi esta vacio
         try {
             Files.move(Paths.get(rutafichero+ficheroMover),
                     Paths.get(rutafichero+directorioNuevo).resolve(nuevoNombre),StandardCopyOption.REPLACE_EXISTING);
@@ -173,9 +175,12 @@ public class Main {
         rutaMain += ficheroBorrar;
 
         File fichero = new File(rutaMain);
+        if(fichero.exists()){
+            if(fichero.delete()){
+            System.out.print("BORRANDO PARA SIEMPRE: "+rutaMain);
+            }
+        }
 
-        fichero.delete();
-        System.out.print("BORRANDO PARA SIEMPRE: "+rutaMain);
 
     }
     public static void preguntaRuta(){
@@ -183,5 +188,27 @@ public class Main {
             System.out.println("Ingrese ruta");
             rutaMain = sc.nextLine();
         }
+    }
+    public static void informacionFichero(File fichero){
+
+        if(fichero.exists()){
+            System.out.println("***INFORMACION FICHERO***");
+            System.out.println("Nombre del fichero: "+fichero.getName());
+            System.out.println("Ruta Adsoluta: "+fichero.getAbsolutePath());
+            System.out.println("Tamaño: "+fichero.length());
+
+            if (fichero.isDirectory()){
+                System.out.println("es un directorio");
+            }
+            else{
+                System.out.println("es un archivo");
+            }
+
+        }
+
+    }
+    public static void modificarRute(){
+        System.out.println("Ingrese ruta");
+        rutaMain = sc.nextLine();
     }
 }
