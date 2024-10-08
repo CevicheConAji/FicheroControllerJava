@@ -233,7 +233,8 @@ public class FileController {
         //agregar cuandi esta vacio
         try {
             Files.move(Paths.get(rutafichero + ficheroMover),
-                    Paths.get(rutafichero + directorioNuevo).resolve(nuevoNombre), StandardCopyOption.REPLACE_EXISTING);
+                    Paths.get(rutafichero + directorioNuevo).resolve(nuevoNombre),
+                    StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
