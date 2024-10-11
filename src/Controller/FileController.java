@@ -83,7 +83,7 @@ public class FileController {
                     modificarRuta();
                     break;
                 case "mf":
-                    moverFicheroConFilesRename();
+                    moverFicheroConFieMove();
                     break;
                 case "sy":
                     sistemaOperativo();
@@ -215,7 +215,7 @@ public class FileController {
         }
     }
 
-    public void moverFicheroConFilesRename() {
+    public void moverFicheroConFieMove() {
         String ficheroMover, directorioNuevo, nuevoNombre;
 
         preguntaRuta();
